@@ -19,7 +19,18 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy built jars from the build stage
-COPY --from=build /workspace/*/target/*.jar /app/ || true
+RUN mkdir -p /app
+COPY --from=build /workspace/Utility/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Eureka/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Gate/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/User/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Post/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Comment/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Like/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Friend/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Product/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Order/target/*.jar /app/ 2>/dev/null || true
+COPY --from=build /workspace/Cart/target/*.jar /app/ 2>/dev/null || true
 
 # Copy startup script
 COPY backend-start.sh /app/backend-start.sh
