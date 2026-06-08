@@ -1,0 +1,36 @@
+name: Vercel redeploy with gateway URL
+
+on:
+  workflow_dispatch:
+    inputs:
+      backend_url:
+        description: 'Public gateway URL (e.g., https://my-backend.up.railway.app)'
+        required: true
+
+jobs:
+  set-env-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@28
+
+      - name: Set Vercel env var
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          BACKEND_URL: ${{ github.event.inputs.backend_url }}
+        run: |
+          vercel env add GATEWAY_API_URL "$BACKEND_URL" production --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID" || true
+
+      - name: Trigger Vercel production deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          cd frontend/myapp
+          vercel --prod --token "$VERCEL_TOKEN" --confirm
+
+    # Requires these repository secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
