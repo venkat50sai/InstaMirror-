@@ -18,15 +18,20 @@ RUN set -ex \
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copy built jars from the build stage
+# Copy built jars from the build stage using COPY --from=build
 RUN mkdir -p /app
 
-# Use RUN with shell to handle errors gracefully
-RUN for d in Utility Eureka Gate User Post Comment Like Friend Product Order Cart; do \
-      if [ -d "/root/*/target" ]; then \
-        cp /workspace/$d/target/*.jar /app/ 2>/dev/null || true; \
-      fi; \
-    done || true
+COPY --from=build /workspace/Utility/target/*.jar /app/ || true
+COPY --from=build /workspace/Eureka/target/*.jar /app/ || true
+COPY --from=build /workspace/Gate/target/*.jar /app/ || true
+COPY --from=build /workspace/User/target/*.jar /app/ || true
+COPY --from=build /workspace/Post/target/*.jar /app/ || true
+COPY --from=build /workspace/Comment/target/*.jar /app/ || true
+COPY --from=build /workspace/Like/target/*.jar /app/ || true
+COPY --from=build /workspace/Friend/target/*.jar /app/ || true
+COPY --from=build /workspace/Product/target/*.jar /app/ || true
+COPY --from=build /workspace/Order/target/*.jar /app/ || true
+COPY --from=build /workspace/Cart/target/*.jar /app/ || true
 
 # Copy startup script
 COPY backend-start.sh /app/backend-start.sh
