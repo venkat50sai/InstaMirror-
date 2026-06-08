@@ -84,11 +84,17 @@ start_service "product" 8086
 start_service "order" 8087
 start_service "cart" 8088
 
-echo "All services started. Tailing logs..."
-sleep 5
+echo "All services started. Waiting for initialization..."
+sleep 10
 
-# Keep container alive and show logs
-while true; do
-  if [ -f /app/eureka.log ]; then tail -f /app/eureka.log 2>/dev/null || true; fi
-  sleep 30
+# Show all service logs
+echo "=== SERVICE INITIALIZATION STATUS ==="
+for log in /app/*.log; do
+  svc=$(basename "$log" .log)
+  echo "--- $svc ---"
+  tail -20 "$log" 2>/dev/null || echo "No logs yet"
 done
+echo "====================================="
+
+# Keep container alive and tail all logs
+tail -f /app/*.log 2>/dev/null || true
