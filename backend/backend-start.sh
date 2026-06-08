@@ -14,14 +14,23 @@ find_jar() {
   echo "$jar"
 }
 
-# Environment variables (defaults)
-MYSQL_HOST=${MYSQL_HOST:-mysql}
-MYSQL_PORT=${MYSQL_PORT:-3306}
-MYSQL_DB=${MYSQL_DB:-instagram_clone}
-MYSQL_USER=${MYSQL_USER:-appuser}
-MYSQL_PASS=${MYSQL_PASS:-apppassword}
+# Environment variables (with Railway defaults)
+export MYSQL_HOST=${MYSQL_HOST:-mysql}
+export MYSQL_PORT=${MYSQL_PORT:-3306}
+export MYSQL_DB=${MYSQL_DB:-railway}
+export MYSQL_USER=${MYSQL_USER:-root}
+export MYSQL_PASS=${MYSQL_PASS:-}
 
-EUREKA_URL=${EUREKA_URL:-http://localhost:8761/eureka}
+export EUREKA_URL=${EUREKA_URL:-http://localhost:8761/eureka}
+
+# Debug: Show environment
+echo "=== Configuration ==="
+echo "MYSQL_HOST=$MYSQL_HOST"
+echo "MYSQL_PORT=$MYSQL_PORT"
+echo "MYSQL_DB=$MYSQL_DB"
+echo "MYSQL_USER=$MYSQL_USER"
+echo "EUREKA_URL=$EUREKA_URL"
+echo "===================="
 
 # Start Eureka
 EUREKA_JAR=$(find_jar "eureka")
@@ -36,12 +45,12 @@ fi
 if [ -n "$EUREKA_JAR" ]; then
   echo "Waiting for Eureka to start..."
   for i in {1..30}; do
-    if curl -s $EUREKA_URL/ || true; then
+    if curl -s $EUREKA_URL/ > /dev/null 2>&1; then
       echo "Eureka reachable"
       break
     fi
     sleep 2
-    echo "retry $i"
+    echo "retry $i/30"
   done
 fi
 
@@ -75,5 +84,11 @@ start_service "product" 8086
 start_service "order" 8087
 start_service "cart" 8088
 
-echo "All start commands issued. Tailing logs."
-tail -f /app/*.log
+echo "All services started. Tailing logs..."
+sleep 5
+
+# Keep container alive and show logs
+while true; do
+  if [ -f /app/eureka.log ]; then tail -f /app/eureka.log 2>/dev/null || true; fi
+  sleep 30
+done
