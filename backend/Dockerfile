@@ -21,7 +21,10 @@ WORKDIR /app
 # Create app directory
 RUN mkdir -p /app
 
-# Copy all JAR files from build stage to /app directory
+# Copy entire build workspace from build stage
+COPY --from=build /workspace /workspace
+
+# Find and copy all JAR files from build workspace
 RUN find /workspace -name "*.jar" -type f -exec cp {} /app/ \; 2>/dev/null || true
 
 # Copy startup script from build stage
@@ -29,7 +32,7 @@ COPY --from=build /workspace/backend-start.sh /app/backend-start.sh
 RUN chmod +x /app/backend-start.sh
 
 # Verify JARs were copied
-RUN ls -la /app/*.jar 2>/dev/null || echo "No JAR files found"
+RUN echo "JAR files in /app:" && ls -la /app/*.jar 2>/dev/null || echo "Checking for JARs..." && find /app -name "*.jar" -type f
 
 EXPOSE 8761 8888 8081 8082 8083 8084 8085 8086 8087 8088
 
