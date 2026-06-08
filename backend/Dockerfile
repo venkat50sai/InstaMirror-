@@ -5,9 +5,9 @@ WORKDIR /workspace
 # Copy entire project (backend directory is context root via railway.json)
 COPY . /workspace/
 
-# Build order: Utility first, then other modules. Skip tests for faster builds.
+# Build order: Utility first (with install), then other modules. Skip tests for faster builds.
 RUN set -ex \
-    && if [ -d /workspace/Utility ]; then cd /workspace/Utility && mvn -DskipTests package && cd /workspace; fi \
+    && if [ -d /workspace/Utility ]; then cd /workspace/Utility && mvn -DskipTests install && cd /workspace; fi \
     && for d in Eureka Gate User Post Comment Like Friend Product Order Cart; do \
          if [ -d "/workspace/$d" ]; then \
            echo "Building module: $d"; \
