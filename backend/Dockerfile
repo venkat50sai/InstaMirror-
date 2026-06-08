@@ -18,24 +18,18 @@ RUN set -ex \
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copy built jars from the build stage using COPY --from=build
+# Create app directory
 RUN mkdir -p /app
 
-COPY --from=build /workspace/Utility/target/*.jar /app/ || true
-COPY --from=build /workspace/Eureka/target/*.jar /app/ || true
-COPY --from=build /workspace/Gate/target/*.jar /app/ || true
-COPY --from=build /workspace/User/target/*.jar /app/ || true
-COPY --from=build /workspace/Post/target/*.jar /app/ || true
-COPY --from=build /workspace/Comment/target/*.jar /app/ || true
-COPY --from=build /workspace/Like/target/*.jar /app/ || true
-COPY --from=build /workspace/Friend/target/*.jar /app/ || true
-COPY --from=build /workspace/Product/target/*.jar /app/ || true
-COPY --from=build /workspace/Order/target/*.jar /app/ || true
-COPY --from=build /workspace/Cart/target/*.jar /app/ || true
+# Copy all JAR files from build stage to /app directory
+RUN find /workspace -name "*.jar" -type f -exec cp {} /app/ \; 2>/dev/null || true
 
-# Copy startup script
-COPY backend-start.sh /app/backend-start.sh
+# Copy startup script from build stage
+COPY --from=build /workspace/backend-start.sh /app/backend-start.sh
 RUN chmod +x /app/backend-start.sh
+
+# Verify JARs were copied
+RUN ls -la /app/*.jar 2>/dev/null || echo "No JAR files found"
 
 EXPOSE 8761 8888 8081 8082 8083 8084 8085 8086 8087 8088
 
