@@ -142,6 +142,8 @@ User: root
 Database: instagram_clone
 ```
 
+Database scripts are available in the `database/` folder for manual schema creation and review.
+
 ## Deployment
 
 ### Docker Deployment (Local)

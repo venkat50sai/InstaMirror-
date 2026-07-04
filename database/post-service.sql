@@ -1,0 +1,8 @@
+-- Post service schema
+CREATE TABLE IF NOT EXISTS post (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  caption TEXT,
+  image LONGBLOB,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
