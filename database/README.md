@@ -3,6 +3,7 @@
 This folder contains MySQL CREATE TABLE scripts for each backend microservice.
 
 Files:
+- `00-create-local-databases.sql` — creates all local databases used by the services with the default local MySQL settings.
 - `00-create-database.sql` — creates the `instamirror_db` database and selects it.
 - `user-service.sql` — schema for the user microservice.
 - `product-service.sql` — schema for the product microservice.
@@ -15,7 +16,13 @@ Files:
 
 ## How to use
 
-Run these scripts in MySQL after creating the database: 
+For local development, run the local database setup script first:
+
+```bash
+mysql -u root -proot < 00-create-local-databases.sql
+```
+
+If you want to run the table scripts manually, use:
 
 ```sql
 SOURCE 00-create-database.sql;
@@ -29,4 +36,4 @@ SOURCE order-service.sql;
 SOURCE cart-service.sql;
 ```
 
-If you are using an environment with a single database, run the scripts in the order shown above.
+The services are configured to use the local MySQL defaults `localhost`, `root`, and `root`.

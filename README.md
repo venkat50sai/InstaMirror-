@@ -132,17 +132,22 @@ npm start
 
 ### Database Initialization
 
-The application automatically initializes database schemas on first run. Ensure MySQL is running and accessible:
+For local testing, start MySQL locally and use the default credentials below:
 
 ```bash
-# Default connection
 Host: localhost
 Port: 3306
 User: root
-Database: instagram_clone
+Password: root
 ```
 
-Database scripts are available in the `database/` folder for manual schema creation and review.
+Create the required databases once by running:
+
+```bash
+mysql -u root -proot < database/00-create-local-databases.sql
+```
+
+Then run the service startup scripts or start the backend services with Maven. The backend services use the default local MySQL settings above, and the database scripts in the `database/` folder are also available for manual schema review.
 
 ## Deployment
 
