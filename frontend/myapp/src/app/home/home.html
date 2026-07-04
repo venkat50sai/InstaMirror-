@@ -1,0 +1,125 @@
+<div *ngIf="notificationMessage" class="notification" [ngClass]="notificationType">
+  {{ notificationMessage }}
+</div>
+
+<div class="feed">
+  <div class="post" *ngFor="let post of posts">
+    <div class="post-header">
+      <img
+        [src]="'data:image/png;base64,' + post.userProfilePic"
+        alt="No image"
+        class="profile-pic"
+        (click)="goToProfile(post.userId)"
+      />
+      <span class="username" (click)="goToProfile(post.userId)">{{ post.username }}</span>
+    </div>
+
+    <img [src]="'data:image/png;base64,' + post.image" alt="Post Image" class="post-image" />
+
+    <div class="post-caption"><strong>Caption</strong> {{ post.caption }}</div>
+
+    <div class="post-actions">
+      <div class="like-group">
+        <button
+          type="button"
+          class="like-btn"
+          (click)="post.liked ? RemoveLike(post.id) : likePost(post.id)"
+          [attr.aria-pressed]="post.liked"
+          aria-label="Toggle like"
+        >
+          <svg viewBox="0 0 24 24" class="heart-icon" [class.liked]="post.liked" aria-hidden="true">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="like-count-btn"
+          (click)="GetUsers(post.id, post.likes)"
+          [disabled]="post.likes === 0"
+          aria-label="Show users who liked this post"
+          [title]="post.likes === 0 ? 'No likes yet' : 'View users who liked this post'"
+        >
+          <span>{{ post.likes }}</span>
+        </button>
+      </div>
+
+      <button class="comments-count-btn" type="button" (click)="GetCommentUsers(post.id, post.comments)" aria-label="View comments">
+        <svg viewBox="0 0 24 24" class="comment-icon" aria-hidden="true">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <span>{{ post.comments }}</span>
+      </button>
+    </div>
+
+    <div class="comment-section">
+      <input type="text" placeholder="Add a comment..." [(ngModel)]="newComment" />
+      <button (click)="commentOnPost(post.id)">Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for liked users -->
+<div *ngIf="showLikedUsersModal" class="liked-users-modal">
+  <div class="liked-users-modal__header">
+    <h3>Liked by</h3>
+    <button class="liked-users-modal__close-btn" (click)="closeLikedUsersModal()">×</button>
+  </div>
+
+  <div
+    *ngFor="let user of likedUsers"
+    class="liked-users-modal__user"
+    (click)="goToProfile(user.id)"
+  >
+    <img
+      class="liked-users-modal__profile-pic"
+      [src]="'data:image/jpeg;base64,' + user.image"
+      alt="No Image"
+    />
+    <div class="liked-users-modal__user-info">
+      <span class="liked-users-modal__username">{{ user.username }}</span>
+      <span class="liked-users-modal__fullname">{{ user.fullname }}</span>
+    </div>
+  </div>
+  <!-- <button class="liked-users-modal__load-btn" (click)="loadMoreLikedUsers()">Load Next</button> -->
+ <div class="modal-pagination">
+  <button class="prev-btn" (click)="prevLikedUsersPage()" [disabled]="likedUsersPage === 0">Prev</button>
+  <button class="next-btn" (click)="nextLikedUsersPage()" [disabled]="likedUsersPage + 1 >= likedUsersTotalPages">Next</button>
+</div>
+</div>
+
+<!-- Comment Modal -->
+<div *ngIf="showCommentsModal" class="comments-modal">
+  <div class="comments-modal__header">
+    <h3>Comments</h3>
+    <button class="comments-modal__close-btn" (click)="closeCommentsModal()">×</button>
+  </div>
+  <div class="comments-modal__content">
+    <div *ngFor="let comment of currentComments" class="comment-card">
+      <img
+        class="comment-card__profile-pic"
+        [src]="'data:image/png;base64,' + comment.image"
+        alt="Profile Pic"
+      />
+      <div class="comment-card__text">
+        <span class="comment-card__username" (click)="goToProfile(comment.id)">{{
+          comment.username
+        }}</span>
+        <span class="comment-card__comment">{{ comment.comment }}</span>
+      </div>
+      <button
+        *ngIf="comment.id === currentUserId"
+        class="comment-card__delete-btn"
+        (click)="deleteComment(comment.commentId)"
+      >
+        Delete
+      </button>
+    </div>
+   <div class="modal-pagination">
+  <button class="prev-btn" (click)="prevCommentsPage()" [disabled]="commentUsersPage === 0">Prev</button>
+  <button class="next-btn" (click)="nextCommentsPage()" [disabled]="commentUsersPage + 1 >= commentUsersTotalPages">Next</button>
+</div>
+  </div>
+</div>

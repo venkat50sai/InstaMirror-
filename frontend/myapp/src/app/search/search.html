@@ -1,0 +1,22 @@
+<div class="search-results-section" *ngIf="searchResults?.length; else noResults">
+  <ul class="user-list">
+    <li *ngFor="let user of searchResults" class="user-card">
+      <div class="left-info">
+        <img class="user-avatar" 
+        [src]="'data:image/jpeg;base64,' + user.image" 
+        alt="No image" />
+        <div class="user-info">
+          <p class="username">{{ user.username }}</p>
+          <p class="fullname">{{ user.fullname }}</p>
+        </div>
+      </div>
+      <button class="view-btn" (click)="viewAccount(user.id)">View</button>
+    </li>
+  </ul>
+</div>
+
+<ng-template #noResults>
+  <div class="no-results">
+    <p>No users found.</p>
+  </div>
+</ng-template>

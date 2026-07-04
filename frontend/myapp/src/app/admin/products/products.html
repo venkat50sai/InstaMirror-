@@ -1,0 +1,59 @@
+<div class="admin-products">
+
+  <h2>🛒 Product Management</h2>
+
+  <div class="add-product">
+    <h3>Add New Product</h3>
+
+    <input [(ngModel)]="newProduct.name" placeholder="Product Name" />
+    <input [(ngModel)]="newProduct.desc" placeholder="Product description" />
+    <input [(ngModel)]="newProduct.price" type="number" placeholder="Price" />
+    <input [(ngModel)]="newProduct.stock" type="number" placeholder="Stock" />
+    <input type="file" (change)="onFileSelected($event)" />
+
+    <button (click)="addProduct()">Add Product</button>
+  </div>
+
+  <hr />
+
+
+  <div class="product-table">
+
+    <div class="product-row" *ngFor="let product of products">
+
+
+      <div class="icon-actions" *ngIf="editProductId !== product.id">
+        <span class="edit-icon" (click)="startEdit(product)">✏️</span>
+        <span class="delete-icon" (click)="deleteProduct(product.id)">❌</span>
+      </div>
+
+
+      <div *ngIf="editProductId !== product.id" class="info">
+         <img [src]="'data:image/jpeg;base64,' + product.image"  class="product-image"/>
+        <h4>{{ product.name }}</h4>
+        <p>{{ product.description }}</p>
+        <p>₹{{ product.price }}</p>
+        <p>Stock: {{ product.stock }}</p>
+      </div>
+
+      <!-- ✏️ EDIT MODE -->
+      <div *ngIf="editProductId === product.id" class="edit-form">
+
+        <input [(ngModel)]="editProduct.name" />
+        <input [(ngModel)]="editProduct.description" />
+        <input [(ngModel)]="editProduct.price" type="number" />
+        <input [(ngModel)]="editProduct.stock" type="number" />
+        <input type="file" (change)="onEditFileSelected($event)" />
+
+        <div class="edit-actions">
+          <button class="save" (click)="updateProduct()">✔</button>
+          <button class="cancel" (click)="cancelEdit()">✖</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

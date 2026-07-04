@@ -1,0 +1,50 @@
+name: Deploy backend to Railway
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Railway CLI
+        run: npm install -g railway
+
+      - name: Login to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          echo "$RAILWAY_TOKEN" | railway login --ci
+
+      - name: Link to Railway project
+        env:
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+        run: |
+          railway link --projectId $RAILWAY_PROJECT_ID
+
+      - name: Deploy backend (Dockerfile)
+        env:
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          MYSQL_DB: ${{ secrets.MYSQL_DB }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
+        run: |
+          railway up --service backend --dockerfile ./backend/Dockerfile --detach
+
+      - name: Show Railway services
+        run: railway status || true
+
+    # NOTE: This workflow requires these repository secrets: RAILWAY_TOKEN, RAILWAY_PROJECT_ID,
+    # MYSQL_HOST, MYSQL_PORT, MYSQL_DB, MYSQL_USER, MYSQL_PASS. Create them in GitHub Settings.

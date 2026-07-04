@@ -1,0 +1,150 @@
+<nav class="navbar">
+  <div class="nav-left">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo"
+      class="logo" (click)="goToHome()"/>
+    <span (click)="goToHome()">Instagram</span>
+  </div>
+
+  <ng-container *ngIf="isLoggedIn">
+    <div class="nav-search">
+      <div class="search-box">
+        <input type="search" [(ngModel)]="searchQuery" placeholder="Search..." aria-label="Search" />
+        <button (click)="onSearch()">Search</button>
+      </div>
+    </div>
+
+  </ng-container>
+
+  <div class="nav-right">
+    <ng-container *ngIf="!isLoggedIn">
+      <button (click)="openModal()">Login / Sign Up</button>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn">
+      <a routerLink="/home">Home</a>
+      <a routerLink="/profile">Profile</a>
+      <a (click)="openCreatePostModal()">Create Post</a>
+      <a routerLink="/shopping">Shopping</a>
+      <a>Messages</a>
+      <button (click)="logout()">Logout</button>
+    </ng-container>
+  </div>
+</nav>
+
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()"></div>
+
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeModal()">×</button>
+    <h2>{{ isLoginMode ? 'Login' : 'Sign Up' }}</h2>
+
+    <form #authForm="ngForm" (ngSubmit)="submitAuthForm(authForm)" novalidate>
+
+      <!-- SIGN UP FIELDS -->
+      <div *ngIf="!isLoginMode">
+        <label>
+          Username
+          <input type="text" [(ngModel)]="username" name="username" required #usernameCtrl="ngModel" />
+        </label>
+        <div class="error-msg" *ngIf="usernameCtrl.invalid && usernameCtrl.touched">Username is required.</div>
+
+        <label>
+          Full Name
+          <input type="text" [(ngModel)]="fullname" name="fullname" required #fullnameCtrl="ngModel" />
+        </label>
+        <div class="error-msg" *ngIf="fullnameCtrl.invalid && fullnameCtrl.touched">Full name is required.</div>
+
+        <label>
+          Date of Birth
+          <input type="date" [(ngModel)]="dob" name="dob" required #dobCtrl="ngModel" />
+        </label>
+        <div class="error-msg" *ngIf="dobCtrl.invalid && dobCtrl.touched">Please enter DOB</div>
+
+        <label>
+          Phone
+          <input type="number" [(ngModel)]="phone" name="phone" required #phoneCtrl="ngModel" />
+        </label>
+        <div class="error-msg" *ngIf="phoneCtrl.invalid && phoneCtrl.touched">Phone is required.</div>
+      </div>
+
+      <!-- COMMON FIELDS -->
+      <label>
+        Email
+        <input type="email" [(ngModel)]="email" name="email" required email #emailCtrl="ngModel" />
+      </label>
+      <div class="error-msg" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+        <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
+        <span *ngIf="emailCtrl.errors?.['email']">Enter a valid email.</span>
+      </div>
+
+      <label>
+        Password
+        <input type="password" [(ngModel)]="password" name="password" required minlength="6" #passwordCtrl="ngModel" />
+      </label>
+      <div class="error-msg" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
+        <span *ngIf="passwordCtrl.errors?.['required']">Password is required.</span>
+        <span *ngIf="passwordCtrl.errors?.['minlength']">Password must be at least 6 characters.</span>
+      </div>
+
+      <div *ngIf="!isLoginMode">
+        <label>
+          Confirm Password
+          <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required minlength="6"
+            #confirmPasswordCtrl="ngModel" />
+        </label>
+        <div class="error-msg" *ngIf="confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched">
+          <span *ngIf="confirmPasswordCtrl.errors?.['required']">Confirm Password is required.</span>
+          <span *ngIf="confirmPasswordCtrl.errors?.['minlength']">Confirm Password must be at least 6 characters.</span>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="authForm.invalid">
+        {{ isLoginMode ? 'Login' : 'Register' }}
+      </button>
+    </form>
+
+    <p class="switch-auth">
+      {{ isLoginMode ? "Don't have an account?" : "Already have an account?" }}
+      <a href="#" (click)="toggleMode($event)">
+        {{ isLoginMode ? 'Sign Up' : 'Login' }}
+      </a>
+    </p>
+  </div>
+</div>
+
+<!-- Backdrop -->
+  <div class="create-post-backdrop" *ngIf="showCreatePostModal" (click)="closeCreatePostModal()"></div>
+
+  <!-- Modal -->
+  <div class="create-post-modal" *ngIf="showCreatePostModal">
+    <div class="create-post-content" (click)="$event.stopPropagation()">
+      <button class="create-post-close-btn" (click)="closeCreatePostModal()">×</button>
+      <h2 class="create-post-title">Create New Post</h2>
+
+      <form (ngSubmit)="submitPost()" #postForm="ngForm" novalidate class="create-post-form">
+        <label class="create-post-label">
+          Description
+          <textarea rows="5" [(ngModel)]="postDescription" name="description" required #descCtrl="ngModel"
+            class="create-post-textarea"></textarea>
+        </label>
+        <div class="create-post-error" *ngIf="descCtrl.invalid && descCtrl.touched">
+          Description is required.
+        </div>
+
+        <label class="create-post-label">
+          Image Upload
+          <input type="file" (change)="onImageSelected($event)" accept="image/*" class="create-post-file" />
+        </label>
+
+        <button type="submit" [disabled]="postForm.invalid || !postImage" class="create-post-submit">
+          Submit Post
+        </button>
+      </form>
+    </div>
+  </div>
+
+
+
+  <div *ngIf="notificationMessage" class="auth-message"
+    [ngClass]="notificationType === 'success' ? 'success-msg' : 'error-msg'">
+    {{ notificationMessage }}
+  </div>

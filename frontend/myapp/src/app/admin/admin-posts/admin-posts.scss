@@ -1,0 +1,186 @@
+.posts-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+/* 🔥 POST CARD */
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🔥 HEADER (USERNAME + AVATAR) */
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+
+  .username {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+}
+
+/* 🔥 IMAGE */
+.post-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+/* 🔥 CONTENT */
+.post-content {
+  padding: 10px;
+}
+
+.description {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.post-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  span:hover {
+    color: #3897f0;
+  }
+}
+
+.delete-btn {
+  margin-top: 8px;
+  background: #ed4956;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 🔥 MODAL */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-box {
+  background: var(--surface);
+  width: 320px;
+  max-height: 450px;
+  border-radius: 10px;
+  padding: 15px;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* 🔥 USERS (LIKES) */
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  position: relative; /* needed for X */
+}
+
+/* 🔥 COMMENTS */
+.comment-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  position: relative; /* needed for X */
+}
+
+.comment-content {
+  display: flex;
+  flex-direction: column;
+
+  .text {
+    font-size: 0.85rem;
+    color: #444;
+  }
+}
+
+/* 🔥 COMMON */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username {
+  font-size: 0.9rem;
+}
+
+/* 🔥 DELETE ICON FOR MODAL ITEMS */
+.delete-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #ed4956;
+  cursor: pointer;
+
+  &:hover::after {
+    content: 'delete';
+    font-size: 0.7rem;
+    color: #333;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+}
+
+/* 🔥 PAGINATION */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+
+  button {
+    padding: 4px 10px;
+    border: none;
+    background: #efefef;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}
+
+/* 🔥 CLOSE */
+.close-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 6px;
+  border: none;
+  background: #dbdbdb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 🔥 RESPONSIVE */
+@media (max-width: 768px) {
+  .posts-container {
+    grid-template-columns: 1fr;
+  }
+}

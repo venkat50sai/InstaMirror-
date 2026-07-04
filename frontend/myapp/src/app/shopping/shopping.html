@@ -1,0 +1,55 @@
+<div *ngIf="notificationMessage" class="notification" [ngClass]="notificationType">
+  {{ notificationMessage }}
+</div>
+
+<div class="product-grid">
+  <div class="product-card" *ngFor="let product of products">
+    <div class="image-wrapper">
+   <img [src]="'data:image/jpeg;base64,' + product.image"/>
+
+  <div *ngIf="product.stock === 0" class="out-of-stock">
+    OUT OF STOCK
+  </div>
+
+  <div class="overlay">
+  <span *ngIf="product.stock > 0" class="stock" [class.low]="product.stock < 5">
+    {{ product.stock + ' left' }}
+  </span>
+</div>
+</div>
+
+    <div class="card-body">
+  <div class="top-row">
+    <h3>{{ product.name }}</h3>
+    <span class="price">₹{{ product.price }}</span>
+  </div>
+
+  <p class="desc">{{ product.description }}</p>
+
+ <ng-container *ngIf="product.stock > 0">
+  
+  <ng-container *ngIf="getProductQty(product.id) === 0; else qtyControls">
+    <button class="btn" (click)="addToCart(product)">
+      Add to Cart
+    </button>
+  </ng-container>
+
+  <ng-template #qtyControls>
+    <div class="qty-box">
+      <button (click)="decreaseQty(product)">−</button>
+      <span>{{ getProductQty(product.id) }}</span>
+      <button (click)="increaseQty(product)">+</button>
+    </div>
+  </ng-template>
+
+</ng-container>
+</div>
+
+  </div>
+
+
+</div>
+
+<button class="floating-cart" *ngIf="cartCount > 0" (click)="viewCart()">
+  🛒 View Cart ({{cartCount}})
+</button>

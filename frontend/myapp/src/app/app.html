@@ -1,0 +1,81 @@
+<app-navbar *ngIf="!isAdmin()"></app-navbar>
+<app-admin-nav *ngIf="isAdmin()"></app-admin-nav>
+
+<button class="theme-toggle" type="button" (click)="toggleTheme()" aria-label="Toggle theme">
+  <span class="mode-icon" aria-hidden="true">
+    <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+      <circle cx="12" cy="12" r="5" />
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+    </svg>
+    <svg *ngIf="theme() !== 'dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+      <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />
+    </svg>
+  </span>
+  <span class="mode-text">{{ theme() === 'dark' ? 'Light Mode' : 'Dark Mode' }}</span>
+</button>
+
+<router-outlet></router-outlet>
+
+
+
+<div *ngIf="isRootRoute()" class="landing-container">
+  <h1>Welcome to Instagram</h1>
+  <p class="subtitle">
+    Your social space to share moments, explore creativity, and connect with the world.
+  </p>
+
+  <div class="features">
+    <div class="feature">
+      <h3>
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <rect x="3" y="7" width="18" height="14" rx="3" />
+            <circle cx="12" cy="14" r="3" />
+            <path d="M8 7V5h8v2" />
+          </svg>
+        </span>
+        Share Photos
+      </h3>
+      <p>Upload your favorite memories and let world see you.</p>
+    </div>
+
+    <div class="feature">
+      <h3>
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </span>
+        Like & Comment
+      </h3>
+      <p>Engage with posts you love. Leave comments and connect with friends.</p>
+    </div>
+
+    <div class="feature">
+      <h3>
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+        </span>
+        Discover People
+      </h3>
+      <p>Search for users, follow friends, and grow your network.</p>
+    </div>
+
+    <div class="feature">
+      <h3>
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </span>
+        Custom Profiles
+      </h3>
+      <p>Edit your profile, update your bio, and personalize your account.</p>
+    </div>
+  </div>
+
+</div>

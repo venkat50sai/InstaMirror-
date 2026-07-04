@@ -1,0 +1,12 @@
+<nav class="navbar">
+  <div class="nav-left">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo"
+      class="logo" (click)="goToHome()"/>
+    <span (click)="goToHome()">Admin Panel</span>
+  </div>
+
+  <div class="nav-right">
+    <a routerLink="/admin/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+    <button (click)="logout()">Logout</button>
+  </div>
+</nav>

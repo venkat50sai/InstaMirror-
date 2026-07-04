@@ -1,0 +1,153 @@
+@use 'sass:math';
+
+:root {
+  color-scheme: light dark;
+  --bg: #f3f6fb;
+  --surface: #ffffff;
+  --surface-soft: #eff3fb;
+  --surface-strong: #f7f9ff;
+  --text: #15202b;
+  --muted: #5e6c85;
+  --muted-strong: #344563;
+  --primary: #3897f0;
+  --primary-strong: #055ec2;
+  --border: rgba(31, 45, 61, 0.14);
+  --shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
+  --shadow-soft: 0 10px 28px rgba(15, 23, 42, 0.08);
+  --danger: #ff5a5f;
+  --success: #2da44e;
+  --notification-bg: rgba(255, 255, 255, 0.94);
+  --notification-text: #15202b;
+  --notification-border: rgba(31, 45, 61, 0.12);
+  --notification-success-bg: rgba(45, 212, 142, 0.18);
+  --notification-success-text: #12452e;
+  --notification-success-border: rgba(45, 212, 142, 0.28);
+  --notification-error-bg: rgba(255, 90, 95, 0.16);
+  --notification-error-text: #6e1f26;
+  --notification-error-border: rgba(255, 90, 95, 0.28);
+  --radius: 24px;
+  --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html {
+  font-family: var(--font);
+  scroll-behavior: smooth;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(circle at top left, rgba(56, 151, 240, 0.14), transparent 28%), var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.modal .switch-auth a,
+.modal .switch-auth a:hover {
+  color: #0095f6 !important;
+  text-decoration: underline !important;
+}
+
+.modal .switch-auth a:hover {
+  color: #0077d8 !important;
+}
+
+::selection {
+  background: rgba(56, 151, 240, 0.17);
+  color: var(--text);
+}
+
+.notification,
+.auth-message {
+  position: fixed;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  max-width: min(92vw, 420px);
+  width: auto;
+  font-size: 0.95rem;
+  padding: 14px 20px;
+  border-radius: 18px;
+  font-weight: 600;
+  user-select: none;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+  text-align: center;
+  background-color: var(--notification-bg);
+  color: var(--notification-text);
+  border: 1px solid var(--notification-border);
+}
+
+.notification.success,
+.auth-message.success-msg {
+  background-color: var(--notification-success-bg);
+  color: var(--notification-success-text);
+  border: 1px solid var(--notification-success-border);
+}
+
+.notification.error,
+.auth-message.error-msg {
+  background-color: var(--notification-error-bg);
+  color: var(--notification-error-text);
+  border: 1px solid var(--notification-error-border);
+}
+
+[data-theme='dark'] {
+  --bg: #0c1320;
+  --surface: #111827;
+  --surface-soft: #16203a;
+  --surface-strong: #1f2a44;
+  --text: #e8eef9;
+  --muted: #9bb2d2;
+  --muted-strong: #c3d0e6;
+  --border: rgba(255, 255, 255, 0.12);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.65);
+  --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.45);
+  --danger: #ff7f87;
+  --success: #55d796;
+  --notification-bg: rgba(12, 19, 32, 0.95);
+  --notification-text: #edf2ff;
+  --notification-border: rgba(255, 255, 255, 0.12);
+  --notification-success-bg: rgba(45, 212, 142, 0.22);
+  --notification-success-text: #ecfff5;
+  --notification-success-border: rgba(45, 212, 142, 0.35);
+  --notification-error-bg: rgba(255, 90, 95, 0.22);
+  --notification-error-text: #ffe2e5;
+  --notification-error-border: rgba(255, 90, 95, 0.38);
+}
+

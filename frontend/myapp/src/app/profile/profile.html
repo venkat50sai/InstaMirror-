@@ -1,0 +1,206 @@
+<!-- Notification Banner (Fixed, Above Modal) -->
+<div *ngIf="notificationMessage" class="notification" [ngClass]="notificationType">
+  {{ notificationMessage }}
+</div>
+
+<!-- Profile Main Container -->
+<div class="profile-container">
+  <div class="profile-card">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-info">
+        <img
+          [src]="'data:image/jpeg;base64,' + profileData.image"
+          alt="No image"
+          class="profile-picture"
+        />
+        <div class="profile-text">
+          <div class="profile-heading">
+            <div>
+              <h2>{{ profileData.username }}</h2>
+              <p class="profile-title"><strong>{{ profileData.fullname }}</strong></p>
+            </div>
+            <button *ngIf="editOption" (click)="openEditProfile()" class="edit-profile-btn header-edit-btn">
+              Edit Profile
+            </button>
+          </div>
+          <p class="profile-bio">{{ profileData.bio }}</p>
+          <div class="profile-meta">
+            <div class="meta-item">
+              <span class="meta-label">Born on</span>
+              <span class="meta-value">{{ profileData.dob }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Email</span>
+              <span class="meta-value">{{ profileData.email }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Phone</span>
+              <span class="meta-value">{{ profileData.phone }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat" (click)="setActiveTab('posts')">
+          <strong>{{ profileData.postsCount }}</strong>
+          <span>Posts</span>
+        </div>
+        <div class="stat" (click)="setActiveTab('followers')">
+          <strong>{{ profileData.followersCount }}</strong>
+          <span>Followers</span>
+        </div>
+        <div class="stat" (click)="setActiveTab('following')">
+          <strong>{{ profileData.followingCount }}</strong>
+          <span>Following</span>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <div class="left-actions">
+          <ng-container *ngIf="!editOption && !isAdmin">
+            <button *ngIf="followStatus" (click)="unfollow(userId)" class="unfollow-profile-btn">
+              Following
+            </button>
+            <button *ngIf="!followStatus" (click)="follow(userId)" class="follow-profile-btn">
+              Follow
+            </button>
+          </ng-container>
+        </div>
+
+        <div class="profile-download-section">
+          <button type="button" class="download-btn" (click)="toggleDownloadDropdown($event)">
+            Download
+            <span *ngIf="selectedFormat" class="download-selected">({{ selectedFormatLabel }})</span>
+            <span class="chevron">▾</span>
+          </button>
+          <ul class="download-options" [class.show]="showDownloadOptions">
+            <li (click)="selectDownloadFormat('excel', $event)" [class.active]="selectedFormat === 'excel'">Excel</li>
+            <li (click)="selectDownloadFormat('json', $event)" [class.active]="selectedFormat === 'json'">JSON</li>
+            <li (click)="selectDownloadFormat('zip', $event)" [class.active]="selectedFormat === 'zip'">ZIP</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<!-- Profile Tabs -->
+
+<!-- Profile Tabs -->
+<div class="profile-tabs">
+  <ng-container [ngSwitch]="activeTab">
+    <!-- Posts -->
+    <div *ngSwitchCase="'posts'" class="posts-section">
+      <div class="post-grid">
+        <div class="post" *ngFor="let post of profileData.posts">
+          <div class="post-image-wrapper">
+            <img [src]="'data:image/png;base64,' + post.image" alt="Post image" class="post-image" />
+
+            <!-- Hover Overlay (Likes/Comments) -->
+            <div class="post-hover-overlay">
+              <div class="icon-group" title="Likes">
+                <svg viewBox="0 0 24 24" fill="white" width="18" height="18">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
+                C13.09 3.81 14.76 3 16.5 3
+                19.58 3 22 5.42 22 8.5
+                c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+                <span>{{ post.likes}}</span>
+              </div>
+              <div class="icon-group" title="Comments">
+                <svg viewBox="0 0 24 24" fill="white" width="18" height="18">
+                  <path d="M21 6h-2v9H5v2h16V6zM17 2H3c-1.1 0-2 0.9-2 2v12l4-4h12c1.1 0 2-0.9 2-2V4c0-1.1-0.9-2-2-2z" />
+                </svg>
+                <span>{{ post.comments}}</span>
+              </div>
+            </div>
+
+        <!-- Delete Button on Hover -->
+        <button *ngIf="editOption" class="delete-overlay-btn" (click)="delete(post.id)" title="Delete Post">
+          &times;
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Followers -->
+      <div *ngSwitchCase="'followers'" class="followers-section">
+        <ul class="user-list">
+          <li *ngFor="let follower of profileData.followers" class="user-card">
+            <img [src]="'data:image/jpeg;base64,' + follower.image" alt="No image" />
+            <div class="user-info">
+              <p><strong>{{ follower.username }}</strong></p>
+              <p>{{ follower.fullname }}</p>
+            </div>
+            <button class="view-btn" (click)="viewAccount(follower.id)">View Account</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Following -->
+      <div *ngSwitchCase="'following'" class="following-section">
+        <ul class="user-list">
+          <li *ngFor="let follow of profileData.followings" class="user-card">
+           <img [src]="'data:image/jpeg;base64,' + follow.image" alt="No image" />
+           <div class="user-info">
+              <p><strong>{{ follow.username }}</strong></p>
+              <p>{{ follow.fullname }}</p>
+            </div>
+           <button class="view-btn" (click)="viewAccount(follow.id)">View Account</button>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEditProfile()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit Profile</h3>
+        <button type="button" class="modal-close" aria-label="Close" (click)="closeEditProfile()">×</button>
+      </div>
+      <form (ngSubmit)="saveProfile()">
+        <div class="image-upload-section">
+          <img [src]="'data:image/jpeg;base64,' + editProfile.image" alt="Profile Image" class="profile-edit-image" />
+          <label class="upload-btn">
+            Upload New Image
+            <input type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
+          </label>
+        </div>
+        <label>
+          Username:
+          <input type="text" [(ngModel)]="editProfile.username" name="username" required />
+        </label>
+        <label>
+          Full Name:
+          <input type="text" [(ngModel)]="editProfile.fullname" name="fullname" required />
+        </label>
+        <label>
+          Bio:
+          <textarea [(ngModel)]="editProfile.bio" name="bio"></textarea>
+        </label>
+        <label>
+          Date of Birth:
+          <input type="date" [(ngModel)]="editProfile.dob" name="dob" />
+        </label>
+        <label>
+          Email:
+          <input type="email" [(ngModel)]="editProfile.email" name="email" required />
+        </label>
+        <label>
+          Phone:
+          <input type="tel" [(ngModel)]="editProfile.phone" name="phone" required />
+        </label>
+  
+        <div class="modal-actions">
+          <button type="submit">Save</button>
+          <button type="button" (click)="closeEditProfile()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

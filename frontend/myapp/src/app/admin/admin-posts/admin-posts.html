@@ -1,0 +1,101 @@
+<div class="posts-container">
+
+  <div class="post-card" *ngFor="let post of posts">
+
+    <!-- 🔥 USER HEADER -->
+    <div class="post-header">
+      <img *ngIf="post.userProfilePic"
+           [src]="'data:image/jpeg;base64,' + post.userProfilePic"
+           class="avatar"/>
+
+      <span class="username">{{ post.username }}</span>
+    </div>
+
+    <!-- 🔥 POST IMAGE -->
+    <img class="post-image"
+         [src]="'data:image/jpeg;base64,' + post.image" />
+
+    <!-- 🔥 CONTENT -->
+    <div class="post-content">
+
+      <p class="description">{{ post.description }}</p>
+
+      <div class="post-stats">
+        <span (click)="GetUsers(post.id, post.likes)">
+          ❤️ {{ post.likes }}
+        </span>
+
+        <span (click)="GetCommentUsers(post.id, post.comments)">
+          💬 {{ post.comments }}
+        </span>
+      </div>
+
+      <button class="delete-btn" (click)="deletePost(post.id)">
+        Delete
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 🔥 Likes Modal -->
+<div class="modal" *ngIf="showLikedUsersModal">
+  <div class="modal-box">
+
+    <h3>Likes</h3>
+
+    <div class="user-list">
+      <div class="user-item" *ngFor="let user of likedUsers">
+        <img *ngIf="user.image"
+             [src]="'data:image/jpeg;base64,' + user.image"
+             class="avatar"/>
+        <span class="username">{{ user.username }}</span>
+        <!-- X for individual like -->
+        <span class="delete-icon" (click)="removeLike(user.id)">✖</span>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button (click)="prevLikedUsersPage()">Prev</button>
+      <button (click)="nextLikedUsersPage()">Next</button>
+    </div>
+
+    <button class="close-btn" (click)="closeLikedUsersModal()">Close</button>
+
+  </div>
+</div>
+
+<!-- 🔥 Comments Modal -->
+<div class="modal" *ngIf="showCommentsModal">
+  <div class="modal-box">
+
+    <h3>Comments</h3>
+
+    <div class="comment-list">
+      <div class="comment-item" *ngFor="let c of currentComments">
+
+        <img *ngIf="c.image"
+             [src]="'data:image/jpeg;base64,' + c.image"
+             class="avatar"/>
+
+        <div class="comment-content">
+          <span class="username">{{ c.username }}</span>
+          <p class="text">{{ c.comment }}</p>
+        </div>
+        <!-- X for individual comment -->
+        <span class="delete-icon" (click)="removeComment(c.commentId)">✖</span>
+
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button (click)="prevCommentsPage()">Prev</button>
+      <button (click)="nextCommentsPage()">Next</button>
+    </div>
+
+    <button class="close-btn" (click)="closeCommentsModal()">Close</button>
+
+  </div>
+</div>

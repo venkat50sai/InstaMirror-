@@ -1,0 +1,26 @@
+<div class="admin-home-container">
+  <div class="admin-home-header">
+    <h1>Admin Home</h1>
+    <p class="subtitle">
+      Manage users, posts, and products from a single administration page.
+    </p>
+  </div>
+
+  <div class="dashboard-cards">
+    <div class="card">
+      <h3>Total Users</h3>
+      <p>{{ totalUsers }}</p>
+      <button type="button" (click)="manageUsers()">Manage Users</button>
+    </div>
+    <div class="card">
+      <h3>Total Posts</h3>
+      <p>{{ totalPosts }}</p>
+      <button type="button" (click)="managePosts()">Manage Posts</button>
+    </div>
+    <div class="card">
+      <h3>Total Products</h3>
+      <p>{{ totalProducts }}</p>
+      <button type="button" (click)="manageProducts()">Manage Products</button>
+    </div>
+  </div>
+</div>
